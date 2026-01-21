@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEIS - Authentication</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>Aadhaar Enrolment Intelligence System</h1>
+            <p class="subtitle">Government of India | UIDAI</p>
+        </div>
+
+        <div class="auth-card-container">
+            <!-- Login Panel -->
+            <div class="auth-panel login-panel active" id="loginPanel">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUserId">User ID</label>
+                        <input type="text" id="loginUserId" name="userId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <p class="link-text">
+                        Don't have an account?
+                        <a href="#" id="showSignup">Sign Up</a>
+                    </p>
+                    <p class="link-text">
+                        <a href="#" id="showForgotPassword">Forgot Password?</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Sign Up Panel -->
+            <div class="auth-panel signup-panel" id="signupPanel">
+                <h2>Sign Up</h2>
+                <form id="signupForm">
+                    <div class="form-group">
+                        <label for="signupUserId">User ID</label>
+                        <input type="text" id="signupUserId" name="userId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupConfirmPassword">Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" name="confirmPassword" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="sendSignupOtp">Send OTP</button>
+
+                    <div class="otp-section" id="signupOtpSection" style="display: none;">
+                        <div class="form-group">
+                            <label for="signupOtp">Enter OTP</label>
+                            <input type="text" id="signupOtp" name="otp" maxlength="6" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Verify & Sign Up</button>
+                    </div>
+
+                    <p class="link-text">
+                        Already have an account?
+                        <a href="#" id="showLogin">Login</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Forgot Password Panel -->
+            <div class="auth-panel forgot-panel" id="forgotPanel">
+                <h2>Forgot Password</h2>
+                <form id="forgotForm">
+                    <div class="form-group">
+                        <label for="forgotIdentifier">User ID or Email</label>
+                        <input type="text" id="forgotIdentifier" name="identifier" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="sendForgotOtp">Send OTP</button>
+
+                    <div class="otp-section" id="forgotOtpSection" style="display: none;">
+                        <div class="form-group">
+                            <label for="forgotOtp">Enter OTP</label>
+                            <input type="text" id="forgotOtp" name="otp" maxlength="6" required>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="verifyForgotOtp">Verify OTP</button>
+                    </div>
+
+                    <div class="password-section" id="newPasswordSection" style="display: none;">
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" name="newPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmNewPassword">Confirm New Password</label>
+                            <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="sendPasswordOtp">Send Confirmation
+                            OTP</button>
+
+                        <div class="form-group" id="finalOtpGroup" style="display: none; margin-top: 15px;">
+                            <label for="finalOtp">Enter Confirmation OTP</label>
+                            <input type="text" id="finalOtp" name="finalOtp" maxlength="6" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="resetPasswordBtn" style="display: none;">Reset
+                            Password</button>
+                    </div>
+
+                    <p class="link-text">
+                        <a href="#" id="backToLogin">Back to Login</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <div class="auth-footer">
+            <p>&copy; 2026 Government of India | Unique Identification Authority of India</p>
+        </div>
+    </div>
+
+    <!-- Warning Modal -->
+    <div class="modal" id="warningModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚠️ Authorization Required</h3>
+            </div>
+            <div class="modal-body">
+                <p>You do not have the required authorization to access this platform.</p>
+                <p>Please ensure your credentials are correct or contact your administrator.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+</body>
+
+</html>
