@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEIS - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1>Aadhaar Enrolment Intelligence System</h1>
+            <p class="header-subtitle">Government of India | UIDAI</p>
+        </div>
+        <div class="header-right">
+            <a href="https://uidai.gov.in" target="_blank" class="gov-link">UIDAI Portal</a>
+            <a href="https://www.data.gov.in" target="_blank" class="gov-link">Data.gov.in</a>
+        </div>
+    </header>
+
+    <!-- Accessibility Toolbar -->
+    <div class="accessibility-toolbar">
+        <button class="toolbar-btn" id="fontIncrease" title="Increase font size">A+</button>
+        <button class="toolbar-btn" id="fontDecrease" title="Decrease font size">A-</button>
+        <button class="toolbar-btn" id="highContrast" title="Toggle high contrast">🌓</button>
+        <button class="toolbar-btn" id="printMode" title="Print dashboard">🖨️</button>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Data Upload Section -->
+        <section class="section" id="uploadSection">
+            <h2>Data Management</h2>
+            <div class="upload-container">
+                <div class="upload-option">
+                    <h3>Use Default Dataset</h3>
+                    <p>Load the pre-configured Birbhum district dataset</p>
+                    <button class="btn btn-primary" id="loadDefaultData">Load Default Data</button>
+                </div>
+                <div class="upload-divider">OR</div>
+                <div class="upload-option">
+                    <h3>Upload Custom Dataset</h3>
+                    <p>Upload your own CSV file with enrolment data</p>
+                    <input type="file" id="fileInput" accept=".csv" style="display: none;">
+                    <button class="btn btn-secondary" id="uploadBtn">Choose File</button>
+                    <p class="upload-filename" id="uploadFilename"></p>
+                    <button class="btn btn-primary" id="processData" style="display: none;">Process Data</button>
+                </div>
+            </div>
+            <div class="data-info" id="dataInfo" style="display: none;">
+                <h3>Dataset Information</h3>
+                <div id="dataInfoContent"></div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="section" id="filtersSection" style="display: none;">
+            <h2>Filters & Options</h2>
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label for="pincodeFilter">Pincode</label>
+                    <select id="pincodeFilter" class="filter-input">
+                        <option value="">All Pincodes</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="colorTheme">Color Theme</label>
+                    <select id="colorTheme" class="filter-input">
+                        <option value="default">Default</option>
+                        <option value="high-contrast">High Contrast</option>
+                        <option value="print">Print Friendly</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button class="btn btn-primary" id="applyFilters">Apply Filters</button>
+                    <button class="btn btn-secondary" id="resetFilters">Reset</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="section" id="analyticsSection" style="display: none;">
+            <h2>Analytics Dashboard</h2>
+
+            <!-- Summary Statistics -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <h3>Total Enrolments</h3>
+                    <p class="stat-value" id="totalEnrolments">-</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Unique Pincodes</h3>
+                    <p class="stat-value" id="uniquePincodes">-</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Date Range</h3>
+                    <p class="stat-value" id="dateRange">-</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Daily Average</h3>
+                    <p class="stat-value" id="dailyAverage">-</p>
+                </div>
+            </div>
+
+            <!-- Visualizations -->
+            <div class="viz-container">
+                <!-- Daily Enrolments -->
+                <div class="viz-card">
+                    <h3>Daily Enrolments Trend</h3>
+                    <div class="viz-image-container">
+                        <img id="dailyEnrolmentsChart" alt="Daily Enrolments Chart" class="viz-image">
+                    </div>
+                    <div class="viz-explanation">
+                        <button class="explanation-toggle">ℹ️ How to interpret</button>
+                        <div class="explanation-content" style="display: none;">
+                            <h4>What this shows:</h4>
+                            <p>This line chart displays the daily total Aadhaar enrolments over time.</p>
+                            <h4>How this was computed:</h4>
+                            <p>Data aggregated by date, summing all age groups for each day.</p>
+                            <h4>How to interpret:</h4>
+                            <p>Peaks indicate high-volume days, valleys indicate low activity. Look for trends,
+                                seasonality, and unusual spikes.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-small export-btn" data-chart="daily_enrolments">Export PNG</button>
+                </div>
+
+                <!-- Age Distribution -->
+                <div class="viz-card">
+                    <h3>Age Group Distribution</h3>
+                    <div class="viz-image-container">
+                        <img id="ageDistributionChart" alt="Age Distribution Chart" class="viz-image">
+                    </div>
+                    <div class="viz-explanation">
+                        <button class="explanation-toggle">ℹ️ How to interpret</button>
+                        <div class="explanation-content" style="display: none;">
+                            <h4>What this shows:</h4>
+                            <p>Breakdown of enrolments across three age groups: 0-5 years, 5-17 years, and 18+ years.
+                            </p>
+                            <h4>How this was computed:</h4>
+                            <p>Sum of all records in each age category, displayed as both counts and percentages.</p>
+                            <h4>How to interpret:</h4>
+                            <p>Helps identify which demographic is most actively enrolling.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-small export-btn" data-chart="age_distribution">Export PNG</button>
+                </div>
+
+                <!-- Top Pincodes -->
+                <div class="viz-card">
+                    <h3>Top 10 Pincodes by Enrolment</h3>
+                    <div class="viz-image-container">
+                        <img id="topPincodesChart" alt="Top Pincodes Chart" class="viz-image">
+                    </div>
+                    <div class="viz-explanation">
+                        <button class="explanation-toggle">ℹ️ How to interpret</button>
+                        <div class="explanation-content" style="display: none;">
+                            <h4>What this shows:</h4>
+                            <p>The 10 pincodes with the highest total enrolments.</p>
+                            <h4>How this was computed:</h4>
+                            <p>Aggregated enrolments by pincode, sorted in descending order.</p>
+                            <h4>How to interpret:</h4>
+                            <p>Identifies geographic hotspots and areas with high demand for enrolment services.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-small export-btn" data-chart="top_pincodes">Export PNG</button>
+                </div>
+
+                <!-- Monthly Trend -->
+                <div class="viz-card">
+                    <h3>Monthly Enrolment Trend</h3>
+                    <div class="viz-image-container">
+                        <img id="monthlyTrendChart" alt="Monthly Trend Chart" class="viz-image">
+                    </div>
+                    <div class="viz-explanation">
+                        <button class="explanation-toggle">ℹ️ How to interpret</button>
+                        <div class="explanation-content" style="display: none;">
+                            <h4>What this shows:</h4>
+                            <p>Total enrolments aggregated by month.</p>
+                            <h4>How this was computed:</h4>
+                            <p>Sum of all enrolments within each calendar month.</p>
+                            <h4>How to interpret:</h4>
+                            <p>Reveals seasonal patterns and monthly variations in enrolment activity.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-small export-btn" data-chart="monthly_trend">Export PNG</button>
+                </div>
+
+                <!-- Day of Week Pattern -->
+                <div class="viz-card">
+                    <h3>Day of Week Pattern</h3>
+                    <div class="viz-image-container">
+                        <img id="dayOfWeekChart" alt="Day of Week Chart" class="viz-image">
+                    </div>
+                    <div class="viz-explanation">
+                        <button class="explanation-toggle">ℹ️ How to interpret</button>
+                        <div class="explanation-content" style="display: none;">
+                            <h4>What this shows:</h4>
+                            <p>Total enrolments grouped by day of the week.</p>
+                            <h4>How this was computed:</h4>
+                            <p>Aggregated all enrolments by weekday name (Monday through Sunday).</p>
+                            <h4>How to interpret:</h4>
+                            <p>Shows which days of the week have higher or lower enrolment activity.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-small export-btn" data-chart="day_of_week">Export PNG</button>
+                </div>
+
+                <!-- Age Over Time -->
+                <div class="viz-card">
+                    <h3>Age Group Distribution Over Time</h3>
+                    <div class="viz-image-container">
+                        <img id="ageOverTimeChart" alt="Age Over Time Chart" class="viz-image">
+                    </div>
+                    <div class="viz-explanation">
+                        <button class="explanation-toggle">ℹ️ How to interpret</button>
+                        <div class="explanation-content" style="display: none;">
+                            <h4>What this shows:</h4>
+                            <p>Stacked area chart showing how each age group contributes to daily enrolments.</p>
+                            <h4>How this was computed:</h4>
+                            <p>Daily aggregation with each age group stacked to show composition.</p>
+                            <h4>How to interpret:</h4>
+                            <p>Reveals temporal patterns in age demographics enrolling over time.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-small export-btn" data-chart="age_over_time">Export PNG</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Anomaly Detection Section -->
+        <section class="section" id="anomalySection" style="display: none;">
+            <h2>Anomaly Detection</h2>
+            <button class="btn btn-primary" id="runAnomalyDetection">Detect Anomalies</button>
+
+            <div id="anomalyResults" style="display: none;">
+                <div class="anomaly-summary" id="anomalySummary"></div>
+
+                <div class="viz-card">
+                    <h3>Anomaly Visualization</h3>
+                    <div class="viz-image-container">
+                        <img id="anomalyChart" alt="Anomaly Chart" class="viz-image">
+                    </div>
+                    <div class="viz-explanation">
+                        <button class="explanation-toggle">ℹ️ Methodology</button>
+                        <div class="explanation-content" style="display: none;">
+                            <h4>Detection Method:</h4>
+                            <p>This system uses two explainable statistical methods:</p>
+                            <ul>
+                                <li><strong>Z-Score Analysis:</strong> Identifies days that deviate significantly from
+                                    the overall mean (threshold: 2.5 standard deviations).</li>
+                                <li><strong>Rolling Window Analysis:</strong> Compares each day to recent trends using a
+                                    7-day moving average.</li>
+                            </ul>
+                            <h4>How to interpret:</h4>
+                            <p>Red markers indicate anomalous days. These may represent data quality issues, special
+                                events, or operational changes requiring investigation.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="anomaly-explanations" id="anomalyExplanations"></div>
+            </div>
+        </section>
+
+        <!-- Export Section -->
+        <section class="section" id="exportSection" style="display: none;">
+            <h2>Export Options</h2>
+            <div class="export-options">
+                <button class="btn btn-secondary" id="exportFullCSV">Export Full Data (CSV)</button>
+                <button class="btn btn-secondary" id="exportSummaryCSV">Export Summary (CSV)</button>
+                <button class="btn btn-secondary" id="exportAllCharts">Export All Charts (ZIP)</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Developed and validated using official Birbhum (West Bengal) Aadhaar datasets via <a
+                href="https://www.data.gov.in/">Data.gov.in</a> </p>
+        <p>Built with ❤️ by <a href="http://github.com/SpicychieF05/">Chirantan Mallick</a>, <a
+                href="https://github.com/AkashMondal27">Akash Mondal</a>, <a
+                href="https://github.com/Sahin-sultan">Sahin Sultan</a> & <a href="https://github.com/PiyalBaray">Piyal
+                Baray</a></p>
+        <p>&copy; 2026 Government of India | Unique Identification Authority of India</p>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loader"></div>
+        <p>Processing data...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
